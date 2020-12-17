@@ -1,3 +1,4 @@
+// for storing all of our contacts
 import React, { useContext } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -8,7 +9,7 @@ export function useContacts() {
     return useContext(ContactsContext);
 }
 
-export function ContactsProvider({ children}) {
+export function ContactsProvider({ children }) {
     // get the list of contacts
     const [contacts, setContacts ] = useLocalStorage('contacts', []);
 
