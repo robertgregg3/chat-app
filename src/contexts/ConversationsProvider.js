@@ -64,6 +64,15 @@ export function ConversationsProvider({ id, children }) {
             return { id: recipient, name } // if no contact, the name defaults back to the recipient
          });
 
+         const messages = conversation.messages.map(message => {
+            const contact = contacts.find(contact => {
+            return contact.id === message.sender; 
+            })
+            const name = (contact && contact.name) || message.sender; 
+            const fromMe = id === message.sender;
+            return { ...message, senderName: name, fromMe }
+         })
+
          const selected = index === selectedConversationIndex;
          return { ...conversation, recipients, selected } // returns all of the conversations and the newly formatted recipients with a name and ID instead of a list of ids. 
     });
