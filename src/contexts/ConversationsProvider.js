@@ -1,7 +1,8 @@
 // for storing all of our conversations
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect, useCallback } from 'react'
 import useLocalStorage from '../hooks/useLocalStorage';
 import { useContacts } from './ContactsProvider';
+import { useSocket } from './SocketProvider';
  
 const ConversationsContext = React.createContext();
 
@@ -15,6 +16,7 @@ export function ConversationsProvider({ id, children }) {
     const [conversations, setConversations ] = useLocalStorage('conversations', []);
     const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
     const { contacts } = useContacts();
+    const socket = useSocket();
 
     // creating a new conversation
     function createConversation(recipients) {
@@ -23,7 +25,7 @@ export function ConversationsProvider({ id, children }) {
         });
     }
 
-    function addMessageToConversation({ recipients, text, sender }) {
+    const addMessageToConversation = useCallback(({ recipients, text, sender }) => {
         setConversations(prevConversations => {
             let madeChange = false;
             const newMessage = { sender, text };
@@ -49,9 +51,20 @@ export function ConversationsProvider({ id, children }) {
                 ] // take the previous conversatons, create a new one that has those recipients, the messages instead of being empty will now hold the new messages
             }
         })
-    }
+    }, [setConversations])
+
+    // useEffect rather than create an eventlistener when you receive a message otherwise it will be called so many times and slow performance
+    useEffect(() => {
+        if(socket == null) return;
+
+        socket.on('receive-message', addMessageToConversation)
+
+        return () => socket.off('receive-message');
+    }, [ socket, addMessageToConversation ])
 
     function sendMessage(recipients, text){
+        socket.emit('send-message', { recipients, text })
+
         addMessageToConversation({ recipients, text, sender: id });
     }
 

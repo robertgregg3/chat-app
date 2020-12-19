@@ -11,7 +11,7 @@ const CONTACTS_KEY      = 'contacts';
 export default function Sidebar({ id }) {
     const [ activeKey, setActiveKey ] = useState(CONVERSATIONS_KEY);
     const [ modalOpen, setModalOpen ] = useState(false)
-    const conversationIsOpen = activeKey === CONVERSATIONS_KEY;
+    const conversationsOpen = activeKey === CONVERSATIONS_KEY;
 
     function closeModal() {
         setModalOpen(false);
@@ -40,12 +40,14 @@ export default function Sidebar({ id }) {
                     Your Id: <span className="text-muted">{id}</span>
                 </div>
                 <Button className="rounded-0" onClick={() => setModalOpen(true)}>
-                    New {conversationIsOpen ? 'Conversation' : 'Contact'}
+                    New {conversationsOpen ? 'Conversation' : 'Contact'}
                 </Button>
             </Tab.Container>
             <Modal show={modalOpen} onHide={closeModal} className="border-0">
-                <NewConversationModal closeModal={closeModal} /> 
-                <NewContactModal closeModal={closeModal} />
+                {conversationsOpen ? 
+                    <NewConversationModal closeModal={closeModal} /> :  
+                    <NewContactModal closeModal={closeModal} />
+                }
             </Modal>
         </div>
     )
