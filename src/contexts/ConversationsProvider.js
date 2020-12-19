@@ -74,7 +74,7 @@ export function ConversationsProvider({ id, children }) {
          })
 
          const selected = index === selectedConversationIndex;
-         return { ...conversation, recipients, selected } // returns all of the conversations and the newly formatted recipients with a name and ID instead of a list of ids. 
+         return { ...conversation, recipients, messages, selected } // returns all of the conversations and the newly formatted recipients with a name and ID instead of a list of ids. 
     });
 
     const value = {
