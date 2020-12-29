@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import {v4 as uuidV4 } from 'uuid';
 
-export default function Login({ onIdSubmit }) {
+export default function Login({ onIdSubmit }) { // passing the onIdSubmit function from the props in teh App.js
     const idRef = useRef();
 
     function handleSubmit(e) {
